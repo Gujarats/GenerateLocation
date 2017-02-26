@@ -10,4 +10,4 @@ Call ``SetupLocation(Latitude,Longitude)`` first. and then you can get the rando
 First it will convert the decimal degree to degre like `48° 51' 23.8104''` and then adding the random value given to seconds and minute depends on what method you are using. After that It will convert back to decimal and you will get new latitude and longitude value.
 
 # Contribution
-I'm open to any improvement on the code.
+I'm open to any improvement os please give your pull request if you have one :D.
