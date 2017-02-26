@@ -68,7 +68,7 @@ func RandomLatLong(seconds int) (float64, float64) {
 	location := []float64{lat, lon}
 	randomIndex := rand.Intn(len(location))
 
-	randomSeconds := rand.Intn(seconds)
+	randomSeconds := getRandomNumber(seconds)
 
 	// convert the lat or lon depends on random selection to degree
 	degreeLocation := ToDegree(location[randomIndex])
@@ -91,7 +91,7 @@ func RandomLatLongMinute(minute int) (float64, float64) {
 	location := []float64{lat, lon}
 	randomIndex := rand.Intn(len(location))
 
-	randomMinute := rand.Intn(minute)
+	randomMinute := getRandomNumber(minute)
 
 	// convert the lat or lon depends on random selection to degree
 	degreeLocation := ToDegree(location[randomIndex])
@@ -103,4 +103,10 @@ func RandomLatLongMinute(minute int) (float64, float64) {
 
 	// return lat and lon in orner
 	return location[0], location[1]
+}
+
+// Get Random number from the maximal number given
+// minimal number is 1 to max number
+func getRandomNumber(max int) int {
+	return rand.Intn(max-1) + 1
 }
