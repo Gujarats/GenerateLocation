@@ -50,8 +50,7 @@ func ToDegree(location float64) LocationDegree {
 
 // convert given location Value into Decimal.
 func ToDecimal(locationDegree LocationDegree) float64 {
-	var result float64
-	result = float64(locationDegree.Seconds) / 60.0
+	result := float64(locationDegree.Seconds) / 60.0
 
 	result += float64(locationDegree.Minutes)
 
