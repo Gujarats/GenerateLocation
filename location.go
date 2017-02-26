@@ -75,8 +75,7 @@ func RandomLatLong(seconds int) (float64, float64) {
 	degreeLocation.Seconds += randomSeconds
 
 	// convert the degree to decimal degree and replace it to the current index
-	degreeDecimal := ToDecimal(degreeLocation)
-	location[randomIndex] = degreeDecimal
+	location[randomIndex] = ToDecimal(degreeLocation)
 
 	// return lat and lon in orner
 	return location[0], location[1]
@@ -98,8 +97,7 @@ func RandomLatLongMinute(minute int) (float64, float64) {
 	degreeLocation.Minutes += randomMinute
 
 	// convert the degree to decimal degree and replace it to the current index
-	degreeDecimal := ToDecimal(degreeLocation)
-	location[randomIndex] = degreeDecimal
+	location[randomIndex] = ToDecimal(degreeLocation)
 
 	// return lat and lon in orner
 	return location[0], location[1]
