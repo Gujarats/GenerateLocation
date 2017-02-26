@@ -19,6 +19,7 @@ func SetupLocation(InputLat, InputLon float64) {
 	lon = InputLon
 }
 
+// Convert the latitude or longitudet into Degre Seconds mninute
 func ToDegree(location float64) LocationDegree {
 	// get degree
 	degree := int(location)
@@ -47,6 +48,7 @@ func ToDegree(location float64) LocationDegree {
 
 }
 
+// convert given location Value into Decimal.
 func ToDecimal(locationDegree LocationDegree) float64 {
 	var result float64
 	result = float64(locationDegree.Seconds) / 60.0
