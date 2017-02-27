@@ -21,44 +21,25 @@ func SetupLocation(InputLat, InputLon float64) {
 
 // Convert the latitude or longitudet into Degre Seconds mninute
 func ToDegree(location float64) LocationDegree {
-	// get degree
-	degree := int(location)
-	location = location - float64(degree)
-
-	// get minute
-	multiply := location * 60.0
-	minutes := int(multiply)
-	location = multiply - float64(minutes)
-
-	// get seconds
-	multiply = location * 60
-	seconds := int(multiply)
-
-	// check if the decimal is 9 or 8 we are gointo round up
-	location = multiply - float64(seconds)
-	if location > 0.5 {
-		seconds += 1
-	}
+	// get the location in seconds, rounded up if needed
+	seconds := int(location*60.0*60.0 + 0.5)
+	minutes := seconds / 60
+	degrees := seconds / (60 * 60)
 
 	return LocationDegree{
-		Degree:  degree,
-		Minutes: minutes,
-		Seconds: seconds,
+		Degree:  degrees,
+		Minutes: minutes % 60,
+		Seconds: seconds % 60,
 	}
 
 }
 
 // convert given location Value into Decimal.
 func ToDecimal(locationDegree LocationDegree) float64 {
-	result := float64(locationDegree.Seconds) / 60.0
-
-	result += float64(locationDegree.Minutes)
-
-	result = result / 60.0
-
-	result += float64(locationDegree.Degree)
-
-	return result
+	totalSeconds := locationDegree.Degree * 60 * 60
+	totalSeconds += locationDegree.Minutes * 60
+	totalSeconds += locationDegree.Seconds
+	return float64(totalSeconds) / (60.0 * 60.0)
 }
 
 // add seconds to lat or lon so we can get new location.
