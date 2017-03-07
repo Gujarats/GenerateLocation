@@ -77,7 +77,7 @@ locattion.RandomLatLong(yourInputInSecondsRange) // get random lat lang using se
 and 
 
 ```go 
-locattion.RandomLatLongMinute(InputYourMinuteRange) // get random lat lang using seconds; per second would be around 1 Km.
+locattion.RandomLatLongMinute(InputYourMinuteRange) // get random lat lang using seconds; per minute would be around 1 Km.
 ```
 
 ## How does it work
