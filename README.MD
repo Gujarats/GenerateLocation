@@ -4,7 +4,7 @@ for example if you have a base location like 48.8588377,2.2775176. You can gener
 
 ## How To Use It
 ```shell
-$ go get -u github.com/Gujarats/GenerateLocation
+$ go get github.com/Gujarats/GenerateLocation
 ```
 
 Call ``location.SetupLocation(Latitude,Longitude)`` first. and then you can get the random location using
