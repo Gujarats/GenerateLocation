@@ -13,9 +13,10 @@ package driver
 
 import (
 	"github.com/Gujarats/GenerateLocation"
-	"github.com/icrowley/fake"
+	"github.com/icrowley/fake" // used for generate random names.
 )
 
+// We created Driver struct in this case for creating driver data with random names and location.
 type Driver struct {
 	Name   string  `json:"name"`
 	Lat    float64 `json:"lat"`
@@ -23,6 +24,7 @@ type Driver struct {
 	Status bool    `json:"status"`
 }
 
+// Return drivers data from given sum argument.
 func GenereateDriver(sum int) []Driver {
 	var drivers []Driver
 	location.SetupLocation(48.8588377, 2.2775176)
