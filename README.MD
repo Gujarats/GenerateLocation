@@ -85,3 +85,6 @@ First it will convert the decimal degree to degre like `48.8588377` to `48° 51'
 
 ## Contribution
 I'm open to any improvement so please give your pull request if you have one :D.
+### thanks to
+* [Rolfl](http://codereview.stackexchange.com/a/156380/80799).
+for his review
