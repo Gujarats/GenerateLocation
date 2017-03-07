@@ -70,11 +70,12 @@ location.SetupLocation(Latitude,Longitude)
 to set base location. and then you can get the random location using
 
 ```go 
-locattion.RandomLatLong(yourInputInSecondsRange) 
+locattion.RandomLatLong(yourInputInSecondsRange) // get random lat lang using seconds; per second would be around 20 meters.
 ``` 
 and 
 
-```go locattion.RandomLatLongMinute(InputYourMinuteRange) 
+```go 
+locattion.RandomLatLongMinute(InputYourMinuteRange) // get random lat lang using seconds; per second would be around 1 Km.
 ```
 
 ## How does it work
