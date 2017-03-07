@@ -6,7 +6,61 @@ for example if you have a base location like 48.8588377,2.2775176. You can gener
 ```shell
 $ go get github.com/Gujarats/GenerateLocation
 ```
+### Example
+let's say we wanted to generate new location based on the `48.8588377,2.2775176` we can do this by using this code snippet : 
+```go
+package driver
 
+import (
+	"github.com/Gujarats/GenerateLocation"
+	"github.com/icrowley/fake"
+)
+
+type Driver struct {
+	Name   string  `json:"name"`
+	Lat    float64 `json:"lat"`
+	Lon    float64 `json:"lon"`
+	Status bool    `json:"status"`
+}
+
+func GenereateDriver(sum int) []Driver {
+	var drivers []Driver
+	location.SetupLocation(48.8588377, 2.2775176)
+
+	// get 30 % of the sum data
+	smallPercentage := (30.0 / 100.0) * float64(sum)
+	percentData := int(smallPercentage)
+
+	// random lat lon based on seconds
+	for i := 0; i <= sum; i++ {
+		if sum-i <= percentData {
+			// generate lat and lon using minute. from specific number 1-3
+			lat, lon := location.RandomLatLongMinute(4)
+			dummyDriver := Driver{
+				Name:   fake.FullName(),
+				Lat:    lat,
+				Lon:    lon,
+				Status: true,
+			}
+			drivers = append(drivers, dummyDriver)
+		} else {
+			// generate lat and lon using seconds. from specific number 1-6
+			lat, lon := location.RandomLatLong(7)
+			dummyDriver := Driver{
+				Name:   fake.FullName(),
+				Lat:    lat,
+				Lon:    lon,
+				Status: true,
+			}
+			drivers = append(drivers, dummyDriver)
+		}
+
+	}
+
+	return drivers
+}
+
+```
 Call ``location.SetupLocation(Latitude,Longitude)`` first. and then you can get the random location using
 `locattion.RandomLatLong(yourInputInSecondsRange)` and `locattion.RandomLatLongMinute(InputYourMinuteRange)`.
 
