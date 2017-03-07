@@ -7,7 +7,7 @@ for example if you have a base location like 48.8588377,2.2775176. You can gener
 $ go get github.com/Gujarats/GenerateLocation
 ```
 ### Example
-let's say we wanted to generate new location based on the `48.8588377,2.2775176` we can do this by using this code snippet : 
+let's say we wanted to generate new location based on the following latitude and longitude : `48.8588377,2.2775176` we can do this by using this code snippet : 
 ```go
 package driver
 
@@ -61,8 +61,14 @@ func GenereateDriver(sum int) []Driver {
 }
 
 ```
-Call ``location.SetupLocation(Latitude,Longitude)`` first. and then you can get the random location using
-`locattion.RandomLatLong(yourInputInSecondsRange)` and `locattion.RandomLatLongMinute(InputYourMinuteRange)`.
+#### Note
+From the code above we called 
+```go location.SetupLocation(Latitude,Longitude) 
+``` first to set base location. and then you can get the random location using
+```go locattion.RandomLatLong(yourInputInSecondsRange) 
+``` and 
+```go locattion.RandomLatLongMinute(InputYourMinuteRange) 
+```.
 
 ## How does it work
 First it will convert the decimal degree to degre like `48° 51' 23.8104''` and then adding the random value given to seconds and minute depends on what method you are using. After that It will convert back to decimal and you will get new latitude and longitude value.
