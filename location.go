@@ -19,7 +19,7 @@ func SetupLocation(InputLat, InputLon float64) {
 	lon = InputLon
 }
 
-// Convert the latitude or longitudet into Degre Seconds mninute
+// Convert the latitude or longitudet into (Degre Seconds mninute) format
 func ToDegree(location float64) LocationDegree {
 	// get the location in seconds, rounded up if needed
 	seconds := int(location*60.0*60.0 + 0.5)
@@ -64,7 +64,7 @@ func RandomLatLong(seconds int) (float64, float64) {
 }
 
 // add minute to lat or lon so we can get new location.
-// we created array location so we can randomly select lat and lon to add new seconds degree.
+// we created array location so we can randomly select lat and lon to add new minute degree.
 // getting minute value using pseu-do random from given minute.
 // returning latitude and longitude in order.
 func RandomLatLongMinute(minute int) (float64, float64) {
