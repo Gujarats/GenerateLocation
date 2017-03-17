@@ -27,7 +27,6 @@ func GenerateLocation(lat, lon float64, distance int, limitLength int) []Locatio
 
 	// Generate location to East
 	for counterDistanceEast := distance; counterDistanceEast <= limitLength; counterDistanceEast += distance {
-		fmt.Println("counterDistanceEast = ", counterDistanceEast)
 		newLatEast, newLonEast := newPoint(lat, lon, counterDistanceEast, "east")
 		locations = append(locations, Location{Lat: newLatEast, Lon: newLonEast})
 	}
