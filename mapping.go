@@ -17,7 +17,7 @@ type Location struct {
 // Generate new location from the given point to east,
 // and repeat it until specific of length in km.
 // the length should be the limit and square the mark location.
-// so if the lenght is 40 km then the generate location would be 40 km to east and 40 km to south.
+// so if the limitLeght is 40 km then the generate location would be 40 km to east and 40 km to south.
 // note that the given latitude and longitude must be in the left top of the square.
 // separate and add new location with given distance in km addition
 // NOTE : distance and limitLength must be in km
