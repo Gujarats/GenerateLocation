@@ -80,6 +80,7 @@ func newPoint(lat, lon float64, distance int, direction string) (float64, float6
 
 }
 
+// convert seconds to decimal
 func secondsToDecimal(seconds float64) float64 {
 	return seconds / (60.0 * 60.0)
 }
