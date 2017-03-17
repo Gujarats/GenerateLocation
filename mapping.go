@@ -32,8 +32,6 @@ func GenerateLocation(lat, lon float64, distance int, limitLength int) []Locatio
 		locations = append(locations, Location{Lat: newLatEast, Lon: newLonEast})
 	}
 
-	fmt.Println("location = ", len(locations))
-
 	// looping locationEast to Generate location South
 	for _, locationEast := range locations {
 		for counterDistanceSouth := distance; counterDistanceSouth < limitLength; counterDistanceSouth += distance {
@@ -72,7 +70,7 @@ func newPoint(lat, lon float64, distance int, direction string) (float64, float6
 		// gives negative
 		lat = lat - additionalDecimal
 	default:
-		fmt.Println("Given direction is not available")
+		fmt.Errorf("Given direction is not available")
 		return lat, lon
 	}
 
