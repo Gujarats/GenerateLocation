@@ -1,6 +1,33 @@
 package location
 
-import "testing"
+import (
+	"fmt"
+	"testing"
+)
+
+func TestGetCenterLocation(t *testing.T) {
+	testObjects := []struct {
+		Lat                    float64
+		Lon                    float64
+		Distance               int
+		LimitLength            int
+		TotalExpectedLocations int
+	}{
+		// this should be 100 locations
+		{Lat: -6.9875393, Lon: 108.4446289, Distance: 5, LimitLength: 50, TotalExpectedLocations: 100},
+
+		// this should be 25 locations
+		{Lat: -6.9875393, Lon: 108.4446289, Distance: 2, LimitLength: 10, TotalExpectedLocations: 25},
+	}
+
+	for _, test := range testObjects {
+		actualLocations := GetCenterLocation(test.Lat, test.Lon, test.Distance, test.LimitLength)
+
+		fmt.Printf("result  = %+v\n", actualLocations)
+
+	}
+
+}
 
 func TestGenerateLocation(t *testing.T) {
 	testObjects := []struct {

@@ -16,7 +16,6 @@ type Location struct {
 
 // Generate new location from the given point to east,
 // and repeat it until specific of length in km.
-// the length should be the limit and square the mark location.
 // so if the limitLeght is 40 km then the generate location would be 40 km to east and 40 km to south.
 // note that the given latitude and longitude must be in the left top of the square.
 // separate and add new location with given distance in km addition
@@ -42,6 +41,40 @@ func GenerateLocation(lat, lon float64, distance int, limitLength int) []Locatio
 
 	return locations
 
+}
+
+// Get the center Location
+func GetCenterLocation(lat, lon float64, distance int, limitLength int) Location {
+	var locations []Location
+	baseCenter := (limitLength / distance) / 2
+	fmt.Println("baseCenter = ", baseCenter)
+
+	// Generate location to East
+	for counterDistanceEast := distance; counterDistanceEast <= limitLength; counterDistanceEast += distance {
+		newLatEast, newLonEast := newPoint(lat, lon, counterDistanceEast, "east")
+		locations = append(locations, Location{Lat: newLatEast, Lon: newLonEast})
+	}
+	fmt.Println("Location length = ", len(locations))
+
+	// looping locationEast to Generate location South
+	for indexEast, locationEast := range locations {
+		indexSouth := 0
+		for counterDistanceSouth := distance; counterDistanceSouth < limitLength; counterDistanceSouth += distance {
+			indexSouth++
+			//fmt.Println("indexSouth = ", indexSouth)
+			//fmt.Println("indexEast = ", indexEast)
+			if indexEast+1 == baseCenter && indexSouth+1 == baseCenter {
+				newLatSouth, newLonSouth := newPoint(locationEast.Lat, locationEast.Lon, counterDistanceSouth, "south")
+				return Location{
+					Lat: newLatSouth,
+					Lon: newLonSouth,
+				}
+			}
+		}
+
+	}
+
+	return Location{}
 }
 
 // distance must be in km
