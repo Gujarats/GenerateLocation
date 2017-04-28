@@ -43,11 +43,12 @@ func GenerateLocation(lat, lon float64, distance int, limitLength int) []Locatio
 
 }
 
-// Get the center Location
+// Get the center Location.
+// This function is working like GenererateLocation, but only get the center Location.
+// Imagine that you have a square and inside that square thre are many Location, this will return the center of location inside that square.
 func GetCenterLocation(lat, lon float64, distance int, limitLength int) Location {
 	var locations []Location
 	baseCenter := (limitLength / distance) / 2
-	fmt.Println("baseCenter = ", baseCenter)
 
 	// Generate location to East
 	for counterDistanceEast := distance; counterDistanceEast <= limitLength; counterDistanceEast += distance {
@@ -61,8 +62,6 @@ func GetCenterLocation(lat, lon float64, distance int, limitLength int) Location
 		indexSouth := 0
 		for counterDistanceSouth := distance; counterDistanceSouth < limitLength; counterDistanceSouth += distance {
 			indexSouth++
-			//fmt.Println("indexSouth = ", indexSouth)
-			//fmt.Println("indexEast = ", indexEast)
 			if indexEast+1 == baseCenter && indexSouth+1 == baseCenter {
 				newLatSouth, newLonSouth := newPoint(locationEast.Lat, locationEast.Lon, counterDistanceSouth, "south")
 				return Location{
