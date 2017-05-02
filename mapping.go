@@ -20,7 +20,7 @@ type Location struct {
 // note that the given latitude and longitude must be in the left top of the square.
 // separate and add new location with given distance in km addition
 // NOTE : distance and limitLength must be in km
-func GenerateLocation(lat, lon float64, distance int, limitLength int) []Location {
+func GenerateLocation(lat, lon, distance, limitLength float64) []Location {
 	// create array location for storing the location
 	var locations []Location
 
@@ -46,9 +46,9 @@ func GenerateLocation(lat, lon float64, distance int, limitLength int) []Locatio
 // Get the center Location.
 // This function is working like GenererateLocation, but only get the center Location.
 // Imagine that you have a square and inside that square thre are many Location, this will return the center of location inside that square.
-func GetCenterLocation(lat, lon float64, distance int, limitLength int) Location {
+func GetCenterLocation(lat, lon, distance, limitLength float64) Location {
 	var locations []Location
-	baseCenter := (limitLength / distance) / 2
+	baseCenter := int((limitLength / distance) / 2)
 
 	// Generate location to East
 	for counterDistanceEast := distance; counterDistanceEast <= limitLength; counterDistanceEast += distance {
@@ -78,10 +78,10 @@ func GetCenterLocation(lat, lon float64, distance int, limitLength int) Location
 
 // distance must be in km
 // direction could be west,east,north,south
-func newPoint(lat, lon float64, distance int, direction string) (float64, float64) {
+func newPoint(lat, lon, distance float64, direction string) (float64, float64) {
 	// conver distance to meters
 	// we need to convert it to meters because this will be divided by 1 seconds or 24 in meters
-	distanceMeters := float64(distance * 1000.0)
+	distanceMeters := distance * 1000.0
 
 	// get seconds
 	seconds := distanceMeters / meters
