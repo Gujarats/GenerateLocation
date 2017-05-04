@@ -1,6 +1,5 @@
+//	Generate Latitude and Longitude from given location.
 // To use this package first create Location struct using New() function and give the appropiate argument.
-// To genreate the location you can call RandomLatLong() to generate using seconds degree.
-// And RandomLatLongMinute to genereate new location using minute degree.
 package location
 
 import "math/rand"
