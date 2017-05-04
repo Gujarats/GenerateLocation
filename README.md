@@ -1,4 +1,4 @@
-# Generate Random Location [![Build Status](https://secure.travis-ci.org/Gujarats/GenerateLocation.png)](http://travis-ci.org/Gujarats/GenerateLocation)
+# Generate Random Location [![Build Status](https://secure.travis-ci.org/Gujarats/GenerateLocation.png)](http://travis-ci.org/Gujarats/GenerateLocation) [![GoDoc](https://godoc.org/gopkg.in/gujarats/GenerateLocation?status.svg)](https://godoc.org/gopkg.in/gujarats/GenerateLocation.v1)
 This Library is creating random location from given location. the result will be in decimal degree.
 for example if you have a base location like `48.8588377,2.2775176`. You can generate new location using this library.
 
