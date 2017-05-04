@@ -9,10 +9,21 @@ const (
 	meters = 24.384
 )
 
-type Location struct {
-	Lat float64
-	Lon float64
+// This one is used for getting the center of the marked location by splitting them using quadran.
+type centerLocation struct {
+	QuadranLevelDetail string
+	CenterLocation     Location
 }
+
+// for return value GetCenterQuadranLocations() .
+// the return value is ordered from index 0 to the latest.
+// index 0 = center location level 0
+// index 1 = center location quadran1 level 1
+// index 2 = center location quadran2 level 1
+// index 3 = center location quadran3 level 1
+// index 4 = center location quadran4 level 1
+// index 5 = center location quadran1 level 2. And so on.
+var centerLocations []centerLocation
 
 // Generate new location from the given point to east,
 // and repeat it until specific of length in km.
@@ -20,13 +31,13 @@ type Location struct {
 // note that the given latitude and longitude must be in the left top of the square.
 // separate and add new location with given distance in km addition
 // NOTE : distance and limitLength must be in km
-func GenerateLocation(lat, lon, distance, limitLength float64) []Location {
+func (l *Location) GenerateLocation(distance, limitLength float64) []Location {
 	// create array location for storing the location
 	var locations []Location
 
 	// Generate location to East
 	for counterDistanceEast := distance; counterDistanceEast <= limitLength; counterDistanceEast += distance {
-		newLatEast, newLonEast := newPoint(lat, lon, counterDistanceEast, "east")
+		newLatEast, newLonEast := newPoint(l.Lat, l.Lon, counterDistanceEast, "east")
 		locations = append(locations, Location{Lat: newLatEast, Lon: newLonEast})
 	}
 
@@ -40,6 +51,15 @@ func GenerateLocation(lat, lon, distance, limitLength float64) []Location {
 	}
 
 	return locations
+
+}
+
+// Getting the center marked location by split the map using quadran
+// For example if we have marked the location in some location it will have square shape.
+// And from generated locations we created two dimensional array that will store all the locations
+// We can get the center of the location by diving the square shape to half.
+// Also getting another center location by its level, like center location in quadran level 1.
+func (l *Location) GetCenterQuadranLocations() {
 
 }
 

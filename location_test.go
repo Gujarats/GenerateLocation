@@ -2,10 +2,6 @@ package location
 
 import "testing"
 
-func init() {
-	SetupLocation(48.8588377, 2.2775176)
-}
-
 func TestToDegree(t *testing.T) {
 	type testObject struct {
 		InputLat float64
@@ -23,7 +19,7 @@ func TestToDegree(t *testing.T) {
 	}
 
 	for _, test := range testObjects {
-		actual := ToDegree(test.InputLat)
+		actual := toDegree(test.InputLat)
 		if actual.Degree != test.Expected.Degree || actual.Minutes != test.Expected.Minutes || actual.Seconds != test.Expected.Seconds {
 			t.Errorf("Error actual = %+v, expected = %+v\n", actual, test.Expected)
 		}
@@ -41,7 +37,7 @@ func TestToDecimal(t *testing.T) {
 	}
 
 	for _, test := range testObjects {
-		actual := ToDecimal(test.InputLocation)
+		actual := toDecimal(test.InputLocation)
 
 		if !isFloatEqual(actual, test.Expected) {
 			t.Errorf("Error result is not the same actual = %v, expected = %v\n", actual, test.Expected)
@@ -50,22 +46,26 @@ func TestToDecimal(t *testing.T) {
 
 }
 
-func TestRandomLatLong(t *testing.T) {
+func TestRandomLatLongSeconds(t *testing.T) {
+
+	location := New(48.8588377, 2.2775176)
 	// init location paris
-	rLat, rLon := RandomLatLong(12) // give 12 to get random number from 1-12
+	rLat, rLon := location.RandomLatLongSeconds(12) // give 12 to get random number from 1-12
 
 	// comparing the lat with rLat (generated value location)
-	if isFloatEqual(rLat, lat) && isFloatEqual(rLon, lon) {
+	if isFloatEqual(rLat, location.Lat) && isFloatEqual(rLon, location.Lon) {
 		t.Errorf("Error the generated value is the same")
 	}
 
 }
 
 func TestRandonLatLongMinute(t *testing.T) {
-	rLat, rLon := RandomLatLongMinute(6) // give 12 to get random number from 1-12
+	location := New(48.8588377, 2.2775176)
+
+	rLat, rLon := location.RandomLatLongMinute(6) // give 12 to get random number from 1-12
 
 	// comparing the lat with rLat (generated value location)
-	if isFloatEqual(rLat, lat) && isFloatEqual(rLon, lon) {
+	if isFloatEqual(rLat, location.Lat) && isFloatEqual(rLon, location.Lon) {
 		t.Errorf("Error the generated value is the same")
 	}
 

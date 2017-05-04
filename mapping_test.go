@@ -45,7 +45,8 @@ func TestGenerateLocation(t *testing.T) {
 	}
 
 	for _, test := range testObjects {
-		actualLocations := GenerateLocation(test.Lat, test.Lon, test.Distance, test.LimitLength)
+		location := New(test.Lat, test.Lon)
+		actualLocations := location.GenerateLocation(test.Distance, test.LimitLength)
 		if len(actualLocations) != test.TotalExpectedLocations {
 			//fmt.Printf("result  = %+v\n", actualLocations)
 			t.Errorf("Error TotalExpectedLocations = %v, but actual = %v\n", test.TotalExpectedLocations, len(actualLocations))
