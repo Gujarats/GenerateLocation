@@ -3,8 +3,15 @@ This Library is creating random location from given location. the result will be
 for example if you have a base location like `48.8588377,2.2775176`. You can generate new location using this library.
 
 ## How To Use It
+
+First Download the repository
 ```shell
 $ go get gopkg.in/gujarats/GenerateLocation.v1
+```
+
+And Import to your project 
+```go
+import "gopkg.in/gujarats/GenerateLocation.v1" // refers as location
 ```
 
 ### Example 1
