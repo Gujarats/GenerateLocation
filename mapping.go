@@ -36,17 +36,6 @@ func (l *Location) GenerateLocation(distance, limitLength float64) []Location {
 		locations = append(locations, Location{Lat: newLatEast, Lon: newLonEast})
 	}
 
-	// create multidimentional array to mapping the location
-	//mappingLocations = make([][]Location, len(locations))
-	//for index, _ := range mappingLocations {
-	//	mappingLocations[index] = make([]Location, len(locations))
-	//}
-
-	//initilize value mappingLocations
-	//for i := 0; i < len(locations); i++ {
-	//	mappingLocations[0][i] = locations[i]
-	//}
-
 	// looping locationEast to Generate location South
 	for _, locationEast := range locations {
 		for counterDistanceSouth := distance; counterDistanceSouth < limitLength; counterDistanceSouth += distance {
@@ -55,7 +44,6 @@ func (l *Location) GenerateLocation(distance, limitLength float64) []Location {
 			location := Location{Lat: newLatSouth, Lon: newLonSouth}
 
 			// store our generated location
-			//mappingLocations[rowIndex][columnIndex] = location
 			locations = append(locations, location)
 		}
 
@@ -142,7 +130,6 @@ func (l *Location) GetCenterQuadranLocations(distance, limitLength float64, deep
 			var locations = [4]Location{}
 			//getting all the center quadran from the
 
-			fmt.Printf("markedCenters = %+v\n", markedCenters)
 			for _, markedCenter := range markedCenters {
 				// get positions for getting all 4 center locations from its quadran
 				position := float64(len(multiLocations)) / math.Pow(2.0, float64(level+1))
@@ -176,33 +163,24 @@ func getCenterLocations(multiLocations [][]Location, centerIndex [2]int, positio
 
 	// get quadran 1 center location
 	// go left and go up
-	fmt.Printf("index original = %v,%v\n", x, y)
-	fmt.Printf("index = %v,%v\n", x-position, y+position)
-	fmt.Printf("MultiLocations length = %+v\n", len(multiLocations))
-	fmt.Printf("result = %+v\n", multiLocations[x-position][y+position])
-	fmt.Println("=================================================================")
-	//markedCenters[0] = [2]int{x - position, y + position}
 	markedCenters = append(markedCenters, [2]int{x - position, y + position})
 	locations[0] = multiLocations[x-position][y+position]
 
 	// get quadran 2
 	// go righ go up
 	centerLocQ2 := multiLocations[x-position][y-position]
-	//markedCenters[1] = [2]int{x - position, y - position}
 	markedCenters = append(markedCenters, [2]int{x - position, y - position})
 	locations[1] = centerLocQ2
 
 	// get quadran 3
 	// go down go left
 	centerLocQ3 := multiLocations[x+position][y-position]
-	//markedCenters[2] = [2]int{x + position, y - position}
 	markedCenters = append(markedCenters, [2]int{x + position, y - position})
 	locations[2] = centerLocQ3
 
 	// getquadra 4
 	// go down go right
 	centerLocQ4 := multiLocations[x+position][y+position]
-	//markedCenters[3] = [2]int{x + position, y + position}
 	markedCenters = append(markedCenters, [2]int{x + position, y + position})
 	locations[3] = centerLocQ4
 
@@ -221,7 +199,6 @@ func GetCenterLocation(lat, lon, distance, limitLength float64) Location {
 		newLatEast, newLonEast := newPoint(lat, lon, counterDistanceEast, "east")
 		locations = append(locations, Location{Lat: newLatEast, Lon: newLonEast})
 	}
-	fmt.Println("Location length = ", len(locations))
 
 	// looping locationEast to Generate location South
 	for indexEast, locationEast := range locations {
