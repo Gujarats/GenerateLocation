@@ -1,6 +1,10 @@
 package location
 
-import "fmt"
+import (
+	"errors"
+	"fmt"
+	"math"
+)
 
 // This const is used for generating the latitdue and longitude
 // only used in newPoint() function
@@ -10,20 +14,11 @@ const (
 )
 
 // This one is used for getting the center of the marked location by splitting them using quadran.
-type centerLocation struct {
-	QuadranLevelDetail string
-	CenterLocation     Location
+type CenterLocation struct {
+	Level          int
+	Quadran        int
+	MarkedLocation Location
 }
-
-// for return value GetCenterQuadranLocations() .
-// the return value is ordered from index 0 to the latest.
-// index 0 = center location level 0
-// index 1 = center location quadran1 level 1
-// index 2 = center location quadran2 level 1
-// index 3 = center location quadran3 level 1
-// index 4 = center location quadran4 level 1
-// index 5 = center location quadran1 level 2. And so on.
-var centerLocations []centerLocation
 
 // Generate new location from the given point to east,
 // and repeat it until specific of length in km.
@@ -41,11 +36,27 @@ func (l *Location) GenerateLocation(distance, limitLength float64) []Location {
 		locations = append(locations, Location{Lat: newLatEast, Lon: newLonEast})
 	}
 
+	// create multidimentional array to mapping the location
+	//mappingLocations = make([][]Location, len(locations))
+	//for index, _ := range mappingLocations {
+	//	mappingLocations[index] = make([]Location, len(locations))
+	//}
+
+	//initilize value mappingLocations
+	//for i := 0; i < len(locations); i++ {
+	//	mappingLocations[0][i] = locations[i]
+	//}
+
 	// looping locationEast to Generate location South
 	for _, locationEast := range locations {
 		for counterDistanceSouth := distance; counterDistanceSouth < limitLength; counterDistanceSouth += distance {
+			// generate Location to the south
 			newLatSouth, newLonSouth := newPoint(locationEast.Lat, locationEast.Lon, counterDistanceSouth, "south")
-			locations = append(locations, Location{Lat: newLatSouth, Lon: newLonSouth})
+			location := Location{Lat: newLatSouth, Lon: newLonSouth}
+
+			// store our generated location
+			//mappingLocations[rowIndex][columnIndex] = location
+			locations = append(locations, location)
 		}
 
 	}
@@ -54,13 +65,148 @@ func (l *Location) GenerateLocation(distance, limitLength float64) []Location {
 
 }
 
+// Give two dimension array of locations
+func (l *Location) GetMultiLocations(distance, limitLength float64) [][]Location {
+	// mapping the locations using two dimensional
+	var mappingLocations [][]Location
+
+	// create array location for storing the location
+	var locations []Location
+
+	// Generate location to East
+	for counterDistanceEast := distance; counterDistanceEast <= limitLength; counterDistanceEast += distance {
+		newLatEast, newLonEast := newPoint(l.Lat, l.Lon, counterDistanceEast, "east")
+		locations = append(locations, Location{Lat: newLatEast, Lon: newLonEast})
+	}
+
+	// create multidimentional array to mapping the location
+	mappingLocations = make([][]Location, len(locations))
+	for index, _ := range mappingLocations {
+		mappingLocations[index] = make([]Location, len(locations))
+	}
+
+	//initilize value mappingLocations
+	for i := 0; i < len(locations); i++ {
+		mappingLocations[0][i] = locations[i]
+	}
+
+	// looping locationEast to Generate location South
+	for rowIndex, locationEast := range locations {
+		columnIndex := 0
+		for counterDistanceSouth := distance; counterDistanceSouth < limitLength; counterDistanceSouth += distance {
+			// generate Location to the south
+			newLatSouth, newLonSouth := newPoint(locationEast.Lat, locationEast.Lon, counterDistanceSouth, "south")
+			location := Location{Lat: newLatSouth, Lon: newLonSouth}
+
+			// store our generated location
+			mappingLocations[rowIndex][columnIndex] = location
+			locations = append(locations, location)
+			columnIndex++
+		}
+
+	}
+
+	return mappingLocations
+
+}
+
 // Getting the center marked location by split the map using quadran
 // For example if we have marked the location in some location it will have square shape.
 // And from generated locations we created two dimensional array that will store all the locations
-// We can get the center of the location by diving the square shape to half.
+// We can get the center of the location by divided the square shape to half.
 // Also getting another center location by its level, like center location in quadran level 1.
-func (l *Location) GetCenterQuadranLocations() {
+// the return value is map first is the level and second is the array of center locations.
+func (l *Location) GetCenterQuadranLocations(distance, limitLength float64, deepLevel int) (map[int][4]Location, error) {
 
+	// getting two dimension array of location
+	multiLocations := l.GetMultiLocations(distance, limitLength)
+
+	// initialize return value using map.
+	// int difine its level
+	// []CenterLocation is going to be storing the center locations
+	var centerLocations = make(map[int][4]Location)
+
+	// check if the level if possible to getting the data
+	if (float64(len(multiLocations)) / math.Pow(2.0, float64(deepLevel+1))) < 1.0 {
+		err := errors.New("Level is not possible to get the data from given locations, please check distance and limitLength")
+		return centerLocations, err
+	}
+
+	level := 0
+	center := len(multiLocations) / 2 // center level 0
+	var markedCenters = [][2]int{{center, center}}
+	for level <= deepLevel {
+		if level > 0 {
+
+			var newMarkedCenters = [][2]int{}
+			var locations = [4]Location{}
+			//getting all the center quadran from the
+
+			fmt.Printf("markedCenters = %+v\n", markedCenters)
+			for _, markedCenter := range markedCenters {
+				// get positions for getting all 4 center locations from its quadran
+				position := float64(len(multiLocations)) / math.Pow(2.0, float64(level+1))
+
+				// getting the locations from each quadran. in this case we have 4 quadran
+				newMarkedCenters, locations = getCenterLocations(multiLocations, markedCenter, int(position))
+				centerLocations[level] = locations
+			}
+
+			// set nil to markedCenters and assign to new markedCenters
+			markedCenters = newMarkedCenters
+
+		} else {
+			// gave to map an array that contains only one CenterLocations which is center0
+			centerLocations[level] = [4]Location{multiLocations[center][center]}
+		}
+		level += 1
+	}
+
+	return centerLocations, nil
+}
+
+// get all center locations from all quadran, this would be 4 locations.
+func getCenterLocations(multiLocations [][]Location, centerIndex [2]int, position int) ([][2]int, [4]Location) {
+	var locations [4]Location
+	var markedCenters [][2]int
+
+	// coordinate to  mapping 2d array of multiLocations
+	x := centerIndex[0]
+	y := centerIndex[1]
+
+	// get quadran 1 center location
+	// go left and go up
+	fmt.Printf("index original = %v,%v\n", x, y)
+	fmt.Printf("index = %v,%v\n", x-position, y+position)
+	fmt.Printf("MultiLocations length = %+v\n", len(multiLocations))
+	fmt.Printf("result = %+v\n", multiLocations[x-position][y+position])
+	fmt.Println("=================================================================")
+	//markedCenters[0] = [2]int{x - position, y + position}
+	markedCenters = append(markedCenters, [2]int{x - position, y + position})
+	locations[0] = multiLocations[x-position][y+position]
+
+	// get quadran 2
+	// go righ go up
+	centerLocQ2 := multiLocations[x-position][y-position]
+	//markedCenters[1] = [2]int{x - position, y - position}
+	markedCenters = append(markedCenters, [2]int{x - position, y - position})
+	locations[1] = centerLocQ2
+
+	// get quadran 3
+	// go down go left
+	centerLocQ3 := multiLocations[x+position][y-position]
+	//markedCenters[2] = [2]int{x + position, y - position}
+	markedCenters = append(markedCenters, [2]int{x + position, y - position})
+	locations[2] = centerLocQ3
+
+	// getquadra 4
+	// go down go right
+	centerLocQ4 := multiLocations[x+position][y+position]
+	//markedCenters[3] = [2]int{x + position, y + position}
+	markedCenters = append(markedCenters, [2]int{x + position, y + position})
+	locations[3] = centerLocQ4
+
+	return markedCenters, locations
 }
 
 // Get the center Location.
