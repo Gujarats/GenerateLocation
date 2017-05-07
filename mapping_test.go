@@ -128,7 +128,7 @@ func TestgetCenterLocation(t *testing.T) {
 		CenterIndex           [2]int
 		Position              int
 		ExpectedMarkedCenters [4][2]int
-		ExpectedLocations     [4]Location
+		ExpectedLocations     [4]CenterLocation
 	}{
 		{
 			MapLocations: [][]Location{
@@ -145,11 +145,23 @@ func TestgetCenterLocation(t *testing.T) {
 				{3, 1},
 				{3, 3},
 			},
-			ExpectedLocations: [4]Location{
-				{0.7, 0.8},
-				{0.3, 0.4},
-				{0.3, 0.4},
-				{0.7, 0.8},
+			ExpectedLocations: [4]CenterLocation{
+				{
+					Quadran:        1,
+					MarkedLocation: Location{0.7, 0.8},
+				},
+				{
+					Quadran:        2,
+					MarkedLocation: Location{0.3, 0.4},
+				},
+				{
+					Quadran:        3,
+					MarkedLocation: Location{0.3, 0.4},
+				},
+				{
+					Quadran:        3,
+					MarkedLocation: Location{0.7, 0.8},
+				},
 			},
 		},
 		{
@@ -170,11 +182,23 @@ func TestgetCenterLocation(t *testing.T) {
 				{4, 2},
 				{4, 4},
 			},
-			ExpectedLocations: [4]Location{
-				{0.9, 0.10},
-				{0.5, 0.6},
-				{0.5, 0.6},
-				{0.9, 0.10},
+			ExpectedLocations: [4]CenterLocation{
+				{
+					Quadran:        1,
+					MarkedLocation: Location{0.9, 0.10},
+				},
+				{
+					Quadran:        2,
+					MarkedLocation: Location{0.5, 0.6},
+				},
+				{
+					Quadran:        3,
+					MarkedLocation: Location{0.5, 0.6},
+				},
+				{
+					Quadran:        3,
+					MarkedLocation: Location{0.9, 0.10},
+				},
 			},
 		},
 		{
@@ -195,11 +219,23 @@ func TestgetCenterLocation(t *testing.T) {
 				{6, 2},
 				{6, 6},
 			},
-			ExpectedLocations: [4]Location{
-				{0.13, 0.14},
-				{0.5, 0.6},
-				{0.5, 0.6},
-				{0.13, 0.14},
+			ExpectedLocations: [4]CenterLocation{
+				{
+					Quadran:        1,
+					MarkedLocation: Location{0.13, 0.14},
+				},
+				{
+					Quadran:        2,
+					MarkedLocation: Location{0.5, 0.6},
+				},
+				{
+					Quadran:        3,
+					MarkedLocation: Location{0.5, 0.6},
+				},
+				{
+					Quadran:        3,
+					MarkedLocation: Location{0.13, 0.14},
+				},
 			},
 		},
 	}
@@ -261,7 +297,8 @@ func TestGetCenterQuadranLocations(t *testing.T) {
 
 		// check the every mapLocations to DeepLevel
 		for level := 0; level < testObject.DeepLevel; level++ {
-			if mapLocations[level] == [4]Location{} {
+			// we expecte the result is not nil
+			if mapLocations[level] == [4]CenterLocation{} {
 				t.Errorf("Error expecting result from the index = %+v, result = %+v\n", index, mapLocations[level])
 			}
 		}

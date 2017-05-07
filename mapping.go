@@ -15,8 +15,7 @@ const (
 
 // This one is used for getting the center of the marked location by splitting them using quadran.
 type CenterLocation struct {
-	Level          int
-	Quadran        int
+	Quadran        int // the quadran will be 1-4. 0 indicate no quadran which will be level 0
 	MarkedLocation Location
 }
 
@@ -104,7 +103,7 @@ func (l *Location) GetMultiLocations(distance, limitLength float64) [][]Location
 // We can get the center of the location by divided the square shape to half.
 // Also getting another center location by its level, like center location in quadran level 1.
 // the return value is map first is the level and second is the array of center locations.
-func (l *Location) GetCenterQuadranLocations(distance, limitLength float64, deepLevel int) (map[int][4]Location, error) {
+func (l *Location) GetCenterQuadranLocations(distance, limitLength float64, deepLevel int) (map[int][4]CenterLocation, error) {
 
 	// getting two dimension array of location
 	multiLocations := l.GetMultiLocations(distance, limitLength)
@@ -112,7 +111,7 @@ func (l *Location) GetCenterQuadranLocations(distance, limitLength float64, deep
 	// initialize return value using map.
 	// int difine its level
 	// []CenterLocation is going to be storing the center locations
-	var centerLocations = make(map[int][4]Location)
+	var centerLocations = make(map[int][4]CenterLocation)
 
 	// check if the level if possible to getting the data
 	if (float64(len(multiLocations)) / math.Pow(2.0, float64(deepLevel+1))) < 1.0 {
@@ -127,7 +126,7 @@ func (l *Location) GetCenterQuadranLocations(distance, limitLength float64, deep
 		if level > 0 {
 
 			var newMarkedCenters = [][2]int{}
-			var locations = [4]Location{}
+			var locations = [4]CenterLocation{}
 			//getting all the center quadran from the
 
 			for _, markedCenter := range markedCenters {
@@ -139,12 +138,17 @@ func (l *Location) GetCenterQuadranLocations(distance, limitLength float64, deep
 				centerLocations[level] = locations
 			}
 
-			// set nil to markedCenters and assign to new markedCenters
+			// assign to new markedCenters
 			markedCenters = newMarkedCenters
 
 		} else {
 			// gave to map an array that contains only one CenterLocations which is center0
-			centerLocations[level] = [4]Location{multiLocations[center][center]}
+			centerLocations[level] = [4]CenterLocation{
+				{
+					Quadran:        0,
+					MarkedLocation: multiLocations[center][center],
+				},
+			}
 		}
 		level += 1
 	}
@@ -153,8 +157,10 @@ func (l *Location) GetCenterQuadranLocations(distance, limitLength float64, deep
 }
 
 // get all center locations from all quadran, this would be 4 locations.
-func getCenterLocations(multiLocations [][]Location, centerIndex [2]int, position int) ([][2]int, [4]Location) {
-	var locations [4]Location
+func getCenterLocations(multiLocations [][]Location, centerIndex [2]int, position int) ([][2]int, [4]CenterLocation) {
+	var locations [4]CenterLocation
+
+	// This variable is used for storing the index on mulitLocations slice.
 	var markedCenters [][2]int
 
 	// coordinate to  mapping 2d array of multiLocations
@@ -164,25 +170,37 @@ func getCenterLocations(multiLocations [][]Location, centerIndex [2]int, positio
 	// get quadran 1 center location
 	// go left and go up
 	markedCenters = append(markedCenters, [2]int{x - position, y + position})
-	locations[0] = multiLocations[x-position][y+position]
+	locations[0] = CenterLocation{
+		Quadran:        1,
+		MarkedLocation: multiLocations[x-position][y+position],
+	}
 
 	// get quadran 2
 	// go righ go up
 	centerLocQ2 := multiLocations[x-position][y-position]
 	markedCenters = append(markedCenters, [2]int{x - position, y - position})
-	locations[1] = centerLocQ2
+	locations[1] = CenterLocation{
+		Quadran:        2,
+		MarkedLocation: centerLocQ2,
+	}
 
 	// get quadran 3
 	// go down go left
 	centerLocQ3 := multiLocations[x+position][y-position]
 	markedCenters = append(markedCenters, [2]int{x + position, y - position})
-	locations[2] = centerLocQ3
+	locations[2] = CenterLocation{
+		Quadran:        3,
+		MarkedLocation: centerLocQ3,
+	}
 
 	// getquadra 4
 	// go down go right
 	centerLocQ4 := multiLocations[x+position][y+position]
 	markedCenters = append(markedCenters, [2]int{x + position, y + position})
-	locations[3] = centerLocQ4
+	locations[3] = CenterLocation{
+		Quadran:        4,
+		MarkedLocation: centerLocQ4,
+	}
 
 	return markedCenters, locations
 }
