@@ -23,7 +23,7 @@ func insertDummyMarkLocation(cityName string, city *cityModel.City) {
 	// some location in Bandung
 	lat := -6.8647721
 	lon := 107.553501
-    loc := location.New(lat,lon)
+        loc := location.New(lat,lon)
 
 	// geneerate location with distance 1 km in every point and limit lenght 50 km.
 	// so it will be (50/1)^2 = 2500 district
