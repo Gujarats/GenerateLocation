@@ -305,3 +305,79 @@ func TestGetCenterQuadranLocations(t *testing.T) {
 	}
 
 }
+
+// NOTE :  negative here is define the south and west here
+// south and east are positive.
+// we give the dummy(not real latitude and longitude) location here to speed up the writting test, but it works just exactly like real lat and lon.
+func TestGetQuadranPosition(t *testing.T) {
+	testObjects := []struct {
+		BaseLocation    Location
+		InputLocation   Location
+		QuadranPosition string
+	}{
+		// index 0
+		{
+			BaseLocation:    Location{0.0, 0.0},
+			InputLocation:   Location{0.1, 0.2},
+			QuadranPosition: "q1",
+		},
+
+		// index 1
+		{
+			BaseLocation:    Location{-2.2, 2.0},
+			InputLocation:   Location{0.1, 2.2},
+			QuadranPosition: "q1",
+		},
+
+		// index 2
+		{
+			BaseLocation:    Location{-3.0, -7.0},
+			InputLocation:   Location{0.1, 0.2},
+			QuadranPosition: "q1",
+		},
+
+		// index 3
+		{
+			BaseLocation:    Location{3.0, -4.0},
+			InputLocation:   Location{4.1, 4.2},
+			QuadranPosition: "q1",
+		},
+
+		// index 4
+		{
+			BaseLocation:    Location{3.0, -4.0},
+			InputLocation:   Location{-4.1, 4.2},
+			QuadranPosition: "q2",
+		},
+
+		// index 5
+		{
+			BaseLocation:    Location{3.0, -4.0},
+			InputLocation:   Location{2.9, 4.2},
+			QuadranPosition: "q2",
+		},
+		// index 6
+		{
+			BaseLocation:    Location{3.0, -4.0},
+			InputLocation:   Location{2.9, -4.2},
+			QuadranPosition: "q3",
+		},
+		// index 7
+		{
+			BaseLocation:    Location{3.0, -4.0},
+			InputLocation:   Location{3.9, -4.2},
+			QuadranPosition: "q4",
+		},
+	}
+
+	for index, testObject := range testObjects {
+		quadranPosition, err := GetQuadranPosition(testObject.BaseLocation, testObject.InputLocation)
+		if err != nil {
+			t.Errorf("Error = %v , at index = %v\n", err.Error(), index)
+		}
+
+		if quadranPosition != testObject.QuadranPosition {
+			t.Errorf("Error at index =%v ,quadran = %v, expected = %v\n", index, quadranPosition, testObject.QuadranPosition)
+		}
+	}
+}
