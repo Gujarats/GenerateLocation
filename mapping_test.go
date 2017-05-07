@@ -2,6 +2,7 @@ package location
 
 import (
 	"fmt"
+	"math"
 	"testing"
 )
 
@@ -94,33 +95,32 @@ func TestNewPoint(t *testing.T) {
 	}
 }
 
-//func TestGetMapLocations(t *testing.T) {
-//	testObjects := []struct {
-//		Lat           float64
-//		Lon           float64
-//		Distance      float64
-//		LimitLength   float64
-//		ExpectedLegth int
-//	}{
-//		// this should be 100 locations
-//		{Lat: -6.9875393, Lon: 108.4446289, Distance: 5.0, LimitLength: 50.0},
-//
-//		// this should be 25 locations
-//		{Lat: -6.9875393, Lon: 108.4446289, Distance: 2.0, LimitLength: 10.0},
-//	}
-//
-//	for _, testObject := range testObjects {
-//		loc := New(testObject.Lat, testObject.Lon)
-//		mapLocations := loc.GenerateLocation(testObject.Distance, testObject.LimitLength)
-//
-//		ExpectedLegth := testObject.LimitLength / testObject.Distance
-//		if len(mapLocations) != testObject.ExpectedLength {
-//			t.Errorf("Error length location = %+v , ExpectedLegth = %+v\n", len(mapLocations), ExpectedLegth)
-//		}
-//
-//	}
-//
-//}
+func TestGetMapLocations(t *testing.T) {
+	testObjects := []struct {
+		Lat         float64
+		Lon         float64
+		Distance    float64
+		LimitLength float64
+	}{
+		// this should be 100 locations
+		{Lat: -6.9875393, Lon: 108.4446289, Distance: 5.0, LimitLength: 50.0},
+
+		// this should be 25 locations
+		{Lat: -6.9875393, Lon: 108.4446289, Distance: 2.0, LimitLength: 10.0},
+	}
+
+	for _, testObject := range testObjects {
+		loc := New(testObject.Lat, testObject.Lon)
+		mapLocations := loc.GenerateLocation(testObject.Distance, testObject.LimitLength)
+
+		ExpectedLength := int(math.Pow((testObject.LimitLength / testObject.Distance), 2))
+		if len(mapLocations) != ExpectedLength {
+			t.Errorf("Error length location = %+v , ExpectedLegth = %+v\n", len(mapLocations), ExpectedLength)
+		}
+
+	}
+
+}
 
 func TestgetCenterLocation(t *testing.T) {
 	testObjects := []struct {
