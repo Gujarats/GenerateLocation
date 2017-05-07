@@ -156,6 +156,53 @@ func (l *Location) GetCenterQuadranLocations(distance, limitLength float64, deep
 	return centerLocations, nil
 }
 
+// Get the center Location.
+// This function is working like GenererateLocation, but only get the center Location.
+// Imagine that you have a square and inside that square thre are many Location, this will return the center of location inside that square.
+func GetCenterLocation(lat, lon, distance, limitLength float64) Location {
+	var locations []Location
+	baseCenter := int((limitLength / distance) / 2)
+
+	// Generate location to East
+	for counterDistanceEast := distance; counterDistanceEast <= limitLength; counterDistanceEast += distance {
+		newLatEast, newLonEast := newPoint(lat, lon, counterDistanceEast, "east")
+		locations = append(locations, Location{Lat: newLatEast, Lon: newLonEast})
+	}
+
+	// looping locationEast to Generate location South
+	for indexEast, locationEast := range locations {
+		indexSouth := 0
+		for counterDistanceSouth := distance; counterDistanceSouth < limitLength; counterDistanceSouth += distance {
+			indexSouth++
+			if indexEast+1 == baseCenter && indexSouth+1 == baseCenter {
+				newLatSouth, newLonSouth := newPoint(locationEast.Lat, locationEast.Lon, counterDistanceSouth, "south")
+				return Location{
+					Lat: newLatSouth,
+					Lon: newLonSouth,
+				}
+			}
+		}
+
+	}
+
+	return Location{}
+}
+
+// asssuming that the base location value are positive.
+func GetQuadranPosition(baseLocation Location, inputLocation Location) (string, error) {
+	if baseLocation.Lat <= inputLocation.Lat && baseLocation.Lon <= inputLocation.Lon {
+		return "q1", nil
+	} else if baseLocation.Lat >= inputLocation.Lat && baseLocation.Lon <= inputLocation.Lon {
+		return "q2", nil
+	} else if baseLocation.Lat >= inputLocation.Lat && baseLocation.Lon >= inputLocation.Lon {
+		return "q3", nil
+	} else if baseLocation.Lat <= inputLocation.Lat && baseLocation.Lon >= inputLocation.Lon {
+		return "q4", nil
+	}
+
+	return "", errors.New("No quadran found")
+}
+
 // get all center locations from all quadran, this would be 4 locations.
 func getCenterLocations(multiLocations [][]Location, centerIndex [2]int, position int) ([][2]int, [4]CenterLocation) {
 	var locations [4]CenterLocation
@@ -203,38 +250,6 @@ func getCenterLocations(multiLocations [][]Location, centerIndex [2]int, positio
 	}
 
 	return markedCenters, locations
-}
-
-// Get the center Location.
-// This function is working like GenererateLocation, but only get the center Location.
-// Imagine that you have a square and inside that square thre are many Location, this will return the center of location inside that square.
-func GetCenterLocation(lat, lon, distance, limitLength float64) Location {
-	var locations []Location
-	baseCenter := int((limitLength / distance) / 2)
-
-	// Generate location to East
-	for counterDistanceEast := distance; counterDistanceEast <= limitLength; counterDistanceEast += distance {
-		newLatEast, newLonEast := newPoint(lat, lon, counterDistanceEast, "east")
-		locations = append(locations, Location{Lat: newLatEast, Lon: newLonEast})
-	}
-
-	// looping locationEast to Generate location South
-	for indexEast, locationEast := range locations {
-		indexSouth := 0
-		for counterDistanceSouth := distance; counterDistanceSouth < limitLength; counterDistanceSouth += distance {
-			indexSouth++
-			if indexEast+1 == baseCenter && indexSouth+1 == baseCenter {
-				newLatSouth, newLonSouth := newPoint(locationEast.Lat, locationEast.Lon, counterDistanceSouth, "south")
-				return Location{
-					Lat: newLatSouth,
-					Lon: newLonSouth,
-				}
-			}
-		}
-
-	}
-
-	return Location{}
 }
 
 // distance must be in km
